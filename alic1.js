@@ -1,137 +1,66 @@
-function alic1() {
+const alic1 = () => {
   const element_canvas = document.getElementsByTagName("canvas")[0];
+
+  if (!element_canvas) return;
 
   const context_canvas = element_canvas.getContext("2d");
 
-  const data_image = context_canvas.createImageData(
-    element_canvas.width,
-    element_canvas.height
-  );
+  if (!context_canvas) return;
 
-  function alic1_frame_animation(time) {
+  const counts = {
+    x: 10,
+    y: 10,
+  };
+
+  const alic1draw = () => {
+    element_canvas.width = window.innerWidth;
+    element_canvas.height = window.innerHeight;
+
     context_canvas.clearRect(0, 0, element_canvas.width, element_canvas.height);
 
-    for (let i = 0; i < data_image.data.length; ++i) {
-      data_image.data[i] =
-        i % 2 == 0
-          ? Math.sin(time + i) * 124 + 124
-          : Math.abs(Math.sin(time + i) * 255);
+    context_canvas.fillStyle = "#000000";
+    context_canvas.strokeStyle = "#000000";
+
+    const size = {
+      x: element_canvas.width / counts.x,
+      y: element_canvas.height / counts.y,
+    };
+
+    context_canvas.font = `${Math.min(size.x, size.y)}px monospace`;
+    context_canvas.textAlign = "center";
+    context_canvas.textBaseline = "middle";
+
+    const offset = {
+      x: size.x / 2,
+      y: size.y / 2,
+    };
+
+    for (let index_y = 0; index_y < counts.y; ++index_y) {
+      const odd_y = index_y % 2;
+
+      const offset_additional_x = (-size.x / 2) * odd_y;
+
+      for (let index_x = 0; index_x < counts.x + odd_y; ++index_x) {
+        context_canvas.moveTo(
+          offset.x + size.x * index_x,
+          offset.y + size.y * index_y
+        );
+
+        context_canvas.strokeText(
+          "1",
+          offset_additional_x + offset.x + size.x * index_x,
+          offset.y + size.y * index_y,
+          size.x
+        );
+      }
     }
+    window.requestAnimationFrame(alic1draw);
+  };
 
-    context_canvas.putImageData(data_image, 0, 0);
+  alic1draw();
+};
 
-    context_canvas.fillStyle = "#ff00ff";
-
-    context_canvas.beginPath();
-    context_canvas.ellipse(40, 40, 30, 30, Math.PI / 4, 0, 2 * Math.PI);
-    context_canvas.closePath();
-    context_canvas.fill();
-
-    context_canvas.beginPath();
-    context_canvas.ellipse(
-      element_canvas.width - 40,
-      40,
-      30,
-      30,
-      Math.PI / 4,
-      0,
-      2 * Math.PI
-    );
-    context_canvas.closePath();
-    context_canvas.fill();
-
-    context_canvas.fillStyle = "#FFFF00";
-    context_canvas.beginPath();
-    context_canvas.ellipse(
-      element_canvas.width / 2,
-      element_canvas.height / 2,
-      20,
-      20,
-      Math.PI / 4,
-      0,
-      2 * Math.PI
-    );
-    context_canvas.closePath();
-    context_canvas.fill();
-
-    const gradient_linear = context_canvas.createLinearGradient(
-      0,
-      element_canvas.height / 2 - 5,
-      element_canvas.width,
-      5
-    );
-
-    gradient_linear.addColorStop(0, "#FF0000");
-    gradient_linear.addColorStop(0.5, "#FFFF00");
-    gradient_linear.addColorStop(1, "#00FF00");
-
-    context_canvas.fillStyle = gradient_linear;
-    context_canvas.beginPath();
-    context_canvas.rect(
-      0,
-      element_canvas.height / 2 - 5,
-      element_canvas.width,
-      5
-    );
-    context_canvas.closePath();
-    context_canvas.fill();
-
-    const gradient_linear_second = context_canvas.createLinearGradient(
-      0,
-      element_canvas.height / 2 - 5,
-      element_canvas.width,
-      5
-    );
-
-    gradient_linear_second.addColorStop(0, "#00FFff");
-    gradient_linear_second.addColorStop(1, "#FF00FF");
-
-    context_canvas.fillStyle = gradient_linear_second;
-    context_canvas.beginPath();
-    context_canvas.moveTo(0, element_canvas.height - 5);
-    context_canvas.lineTo(element_canvas.width - 5, 0);
-    context_canvas.lineTo(element_canvas.width - 5, -100);
-    context_canvas.lineTo(element_canvas.width, -100);
-    context_canvas.lineTo(element_canvas.width, 5);
-    context_canvas.lineTo(5, element_canvas.height);
-    context_canvas.lineTo(5, element_canvas.height + 100);
-    context_canvas.lineTo(-100, element_canvas.height + 100);
-    context_canvas.closePath();
-    context_canvas.fill();
-
-    context_canvas.fillStyle = "#00FFff";
-    context_canvas.beginPath();
-    context_canvas.ellipse(
-      20,
-      element_canvas.height - 20,
-      10,
-      10,
-      Math.PI / 4,
-      0,
-      2 * Math.PI
-    );
-    context_canvas.closePath();
-    context_canvas.fill();
-
-    context_canvas.beginPath();
-    context_canvas.ellipse(
-      element_canvas.width - 20,
-      element_canvas.height - 20,
-      10,
-      10,
-      Math.PI / 4,
-      0,
-      2 * Math.PI
-    );
-    context_canvas.closePath();
-    context_canvas.fill();
-
-    window.requestAnimationFrame(alic1_frame_animation);
-  }
-  window.requestAnimationFrame(alic1_frame_animation);
-}
-
-if (document.readyState != "loading") {
+if (document.readyState === "complete") {
   alic1();
 } else {
   document.addEventListener("DOMContentLoaded", alic1);
