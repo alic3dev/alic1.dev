@@ -41,8 +41,6 @@ body,
   width: 20vw;
   height: 16vh;
 
-  /* margin: auto; */
-
   backdrop-filter: invert(1);
 
   &:nth-child(1),
